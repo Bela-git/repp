@@ -22,6 +22,26 @@
             animation: fadeIn 2s ease-out; /* 設置頁面載入動畫 */
         }
 
+ /* 設置進度條容器 */
+ .progress-bar {
+            width: 100%; /* 設置進度條容器的寬度 */
+            background-color: #f3f3f3; /* 背景顏色 */
+            border: 1px solid #ccc; /* 邊框 */
+            border-radius: 5px; /* 圓角 */
+            height: 30px; /* 設定進度條的高度 */
+        }
+
+        /* 設置進度條內部的樣式 */
+        .progress {
+            height: 100%; /* 使內部的進度條填滿容器的高度 */
+            width: 0%; /* 初始進度條寬度為0% */
+            background-color: #4caf50; /* 進度條顏色 */
+            border-radius: 5px; /* 圓角 */
+            text-align: center; /* 文字居中 */
+            line-height: 30px; /* 文字居中對齊 */
+            color: white; /* 文字顏色 */
+        }
+
         /* 動畫：頁面載入 */
         @keyframes fadeIn {
             from {
@@ -176,6 +196,12 @@
 </head>
 
 <body>
+
+      <!-- 進度條容器 -->
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div> <!-- 內部進度條 -->
+    </div>
+
     <!-- 響應式導航欄 -->
     <nav>
         <div class="logo">My Portfolio</div>
@@ -219,7 +245,7 @@
 
     <!-- 第六個卡片 -->
     <div class="card">
-        <h2>Contact Me</h2>
+        <h2></h2>
         <p>
             這是我練習用的網站。
         </p>
@@ -229,30 +255,45 @@
    <!-- 表單與進度條 -->
    <section id="contact">
     <h2>Contact Me</h2>
-    <form id="contactForm" action="https://formspree.io/f/mrbplrpz" method="POST">
-        <input type="text" id="name" name="name" placeholder="Your Name" required />
-        <input type="email" id="email" name="email" placeholder="Your Email" required />
-        <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-        
-        <!-- 日期與時間輸入 -->
-        <input type="date" id="date" name="date" required />
-        <input type="time" id="time" name="time" required />
+    <div class="contact-container">
+        <form id="contactForm" action="https://formspree.io/f/mrbplrpz" method="POST">
+            <div class="input-group">
+                <input type="text" id="name" name="name" placeholder="Your Name" required />
+                <input type="email" id="email" name="email" placeholder="Your Email" required />
+            </div>
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
 
-        <!-- 驗證碼輸入 -->
-        <input type="text" id="captcha" name="captcha" placeholder="Enter CAPTCHA" required />
-        <div id="captchaImage">1234</div> <!-- 假的驗證碼顯示 -->
+            <div class="input-group">
+                <input type="date" id="date" name="date" required />
+                <input type="time" id="time" name="time" required />
+            </div>
 
-        <input type="submit" value="Send Message" />
-    </form>
+            <div class="captcha-container">
+                <input type="text" id="captcha" name="captcha" placeholder="Enter CAPTCHA" required />
+                <div id="captchaImage">1234</div> <!-- 驗證碼顯示 -->
+            </div>
 
-    <div class="progress-bar">
-        <div class="progress" id="progressBar">0%</div>
+            <input type="submit" value="Send Message" />
+        </form>
+
+        <div class="info-container">
+            <div class="progress-bar">
+                <div class="progress" id="progressBar">0%</div>
+            </div>
+            <p>當前時間: <span id="currentTime"></span></p>
+        </div>
     </div>
+</section><script>
+    // 計算填寫進度
+    let progress = 0;
 
-    <p>當前時間: <span id="currentTime"></span></p>
-</section>
+    // 設定進度條的函式
+    function setProgressBar(percentage) {
+        const progress = document.getElementById('progress'); // 取得進度條內部元素
+        progress.style.width = percentage + '%'; // 設定進度條的寬度，這裡用百分比表示
+        progress.textContent = percentage + '%'; // 顯示當前進度
+    }
 
-<script>
     // 更新時間
     function updateTime() {
         const now = new Date();
@@ -271,7 +312,7 @@
         const captchaElement = document.getElementById('captchaImage');
         captchaElement.textContent = captcha;
         captchaElement.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-        
+
         // 清空驗證碼輸入框
         document.getElementById('captcha').value = "";
     }
@@ -279,6 +320,8 @@
 
     // 即時表單驗證 & 進度條更新
     document.getElementById('contactForm').addEventListener('input', function () {
+        let progress = 0; // 初始化進度條為 0
+
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const message = document.getElementById('message').value.trim();
@@ -287,16 +330,19 @@
         const captcha = document.getElementById('captcha').value.trim();
         const realCaptcha = document.getElementById('captchaImage').textContent;
 
-        // 計算填寫進度
-        let progress = 0;
+        // 根據填寫情況累加進度
         if (name) progress += 20;
-        if (email) progress += 20;
+        if (email) progress += 10;
         if (message) progress += 20;
         if (date) progress += 20;
-        if (time) progress += 10;
-        if (captcha) progress += 10;
+        if (time) progress += 20;
+        if (captcha) progress += 20;
 
-        // 進度條動畫
+        // 防止進度超過 100%
+        if (progress > 100) progress = 100;
+
+        setProgressBar(progress); // 更新進度條
+        // 更新進度條動畫
         document.getElementById('progressBar').style.width = progress + '%';
         document.getElementById('progressBar').textContent = progress + '%';
 
@@ -306,13 +352,32 @@
         document.getElementById('errorMessage').textContent = message ? '' : '請輸入訊息';
         document.getElementById('errorDate').textContent = date ? '' : '請選擇日期';
         document.getElementById('errorTime').textContent = time ? '' : '請選擇時間';
-        document.getElementById('errorCaptcha').textContent = (captcha && captcha === realCaptcha) ? '' : '驗證碼錯誤';
 
+        // 驗證碼檢查
+        if (captcha && captcha === realCaptcha) {
+            document.getElementById('errorCaptcha').textContent = ''; // 清除錯誤提示
+        } else {
+            document.getElementById('errorCaptcha').textContent = '驗證碼錯誤'; // 顯示錯誤提示
+        }
+    });
+
+    // 表單提交時檢查驗證碼
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+        const captcha = document.getElementById('captcha').value.trim();
+        const realCaptcha = document.getElementById('captchaImage').textContent;
+
+        // 檢查驗證碼是否正確
+        if (captcha !== realCaptcha) {
+            e.preventDefault(); // 防止表單提交
+            alert("驗證碼錯誤！請重新輸入正確的驗證碼。");
+            generateCaptcha(); // 重新生成驗證碼
+        }
     });
 
     // 初次加載時生成驗證碼
     generateCaptcha();
 </script>
+
 </body>
 
 </html>
