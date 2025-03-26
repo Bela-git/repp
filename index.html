@@ -176,10 +176,10 @@
     <!-- 聯繫表單 -->
     <section id="contact">
         <h2>Contact Me</h2>
-        <form id="contactForm">
-            <input type="text" id="name" placeholder="Your Name" required />
-            <input type="email" id="email" placeholder="Your Email" required />
-            <textarea id="message" placeholder="Your Message" required></textarea>
+        <form action="https://formspree.io/f/mrbplrpz" method="POST">
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
+            <input type="email" id="email" name="email" placeholder="Your Email" required />
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
             <input type="submit" value="Send Message" />
         </form>
     </section>
