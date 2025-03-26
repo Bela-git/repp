@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複雜互動範例頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        .change-text {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        .toggle-box {
+            background-color: #FF5733;
+            color: white;
+        }
+
+        .change-bg {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .toggle-image {
+            background-color: #FFC107;
+            color: white;
+        }
+
+        .output-box {
+            border: 2px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+            background-color: #ffffff;
+        }
+
+        .image-box {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .output {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dynamic-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>歡迎來到更複雜的互動頁面</h1>
+
+    <p>這個頁面包含多個按鈕，每個按鈕都有不同的交互效果和樣式。</p>
+
+    <button class="button change-text" onclick="changeText()">更改文本內容</button>
+    <button class="button toggle-box" onclick="toggleBox()">顯示/隱藏區塊</button>
+    <button class="button change-bg" onclick="changeBackgroundColor()">改變背景顏色</button>
+    <button class="button toggle-image" onclick="toggleImage()">顯示/隱藏圖片</button>
+
+    <div id="dynamicContent" class="dynamic-content">
+        <div id="outputText" class="output">初始文本內容。</div>
+
+        <div id="outputBox" class="output-box">
+            <p>這是可以顯示或隱藏的區塊。點擊按鈕來切換它。</p>
+        </div>
+
+        <div id="imageBox" class="image-box">
+            <img src="https://via.placeholder.com/300" alt="示範圖片">
+        </div>
+    </div>
+
+    <script>
+        // 更改文本內容的功能
+        function changeText() {
+            document.getElementById("outputText").innerHTML = "文本已經被更改了！";
+        }
+
+        // 顯示或隱藏區塊的功能
+        function toggleBox() {
+            var box = document.getElementById("outputBox");
+            if (box.style.display === "none" || box.style.display === "") {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+        }
+
+        // 改變背景顏色的功能
+        function changeBackgroundColor() {
+            var body = document.body;
+            var colors = ["#f0f8ff", "#ffebcd", "#fffacd", "#ffcccb", "#f0fff0"];
+            var currentColor = body.style.backgroundColor;
+            var newColor = colors[Math.floor(Math.random() * colors.length)];
+
+            // 保證不選到相同顏色
+            while (currentColor === newColor) {
+                newColor = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            body.style.backgroundColor = newColor;
+        }
+
+        // 顯示或隱藏圖片的功能
+        function toggleImage() {
+            var imageBox = document.getElementById("imageBox");
+            if (imageBox.style.display === "none" || imageBox.style.display === "") {
+                imageBox.style.display = "block";
+            } else {
+                imageBox.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
