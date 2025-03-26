@@ -385,7 +385,20 @@ input[type="submit"]:hover {
     // 初次加載時生成驗證碼
     generateCaptcha();
 </script>
+<button id="fetchData">Fetch Data</button>
+<div id="data"></div>
 
+<script>
+   document.getElementById('fetchData').addEventListener('click', function() {
+    fetch('http://127.0.0.1:5000/api/data') // Flask API 的完整 URL
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('data').innerHTML = 
+                `Name: ${data.name}, Job: ${data.job}`;
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
 </body>
 
 </html>
