@@ -1,142 +1,161 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>複雜互動範例頁面</title>
+    <title>複雜的互動範例</title>
     <style>
+        /* 基本樣式設置 */
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s;
         }
 
         h1 {
-            color: #4CAF50;
+            color: #333;
+            font-size: 2.5em;
         }
 
+        p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        /* 主要按鈕樣式 */
         .button {
-            padding: 10px 20px;
+            padding: 15px 25px;
             margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
 
         .button:hover {
-            background-color: #555;
-        }
-
-        .change-text {
-            background-color: #008CBA;
-            color: white;
-        }
-
-        .toggle-box {
-            background-color: #FF5733;
-            color: white;
-        }
-
-        .change-bg {
             background-color: #4CAF50;
             color: white;
         }
 
-        .toggle-image {
-            background-color: #FFC107;
-            color: white;
+        /* 顯示圖片區域 */
+        .image-container {
+            margin-top: 30px;
+            display: none;
         }
 
-        .output-box {
-            border: 2px solid #ccc;
+        .image-container img {
+            width: 60%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        /* 動態顯示的區塊 */
+        .toggle-box {
+            display: none;
+            background-color: #ddd;
             padding: 20px;
             margin-top: 20px;
             border-radius: 5px;
-            display: none;
-            background-color: #ffffff;
         }
 
-        .image-box {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
+        .toggle-box.active {
+            display: block;
         }
 
-        .output {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .dynamic-content {
+        /* 進度條 */
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            height: 25px;
             margin-top: 20px;
         }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background-color: #4CAF50;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
-    <h1>歡迎來到更複雜的互動頁面</h1>
 
-    <p>這個頁面包含多個按鈕，每個按鈕都有不同的交互效果和樣式。</p>
+    <h1>動態互動範例 - 進階</h1>
+    <p>這是一個包含多個互動效果的頁面。探索不同的功能來改變頁面！</p>
 
-    <button class="button change-text" onclick="changeText()">更改文本內容</button>
-    <button class="button toggle-box" onclick="toggleBox()">顯示/隱藏區塊</button>
-    <button class="button change-bg" onclick="changeBackgroundColor()">改變背景顏色</button>
-    <button class="button toggle-image" onclick="toggleImage()">顯示/隱藏圖片</button>
+    <!-- 顯示/隱藏區塊按鈕 -->
+    <button class="button" id="toggleBoxButton">顯示/隱藏內容區塊</button>
 
-    <div id="dynamicContent" class="dynamic-content">
-        <div id="outputText" class="output">初始文本內容。</div>
+    <!-- 切換背景顏色按鈕 -->
+    <button class="button" id="changeColorButton">切換背景顏色</button>
 
-        <div id="outputBox" class="output-box">
-            <p>這是可以顯示或隱藏的區塊。點擊按鈕來切換它。</p>
-        </div>
+    <!-- 顯示圖片的按鈕 -->
+    <button class="button" id="showImageButton">顯示圖片</button>
 
-        <div id="imageBox" class="image-box">
-            <img src="https://via.placeholder.com/300" alt="示範圖片">
-        </div>
+    <!-- 進度條按鈕 -->
+    <button class="button" id="startProgressButton">啟動進度條</button>
+
+    <!-- 顯示/隱藏區塊 -->
+    <div class="toggle-box" id="toggleBox">
+        <p>這是可顯示或隱藏的內容區塊！</p>
+    </div>
+
+    <!-- 顯示圖片的容器 -->
+    <div class="image-container" id="imageContainer">
+        <img src="https://via.placeholder.com/600x400" alt="示範圖片">
+    </div>
+
+    <!-- 進度條 -->
+    <div class="progress-bar" id="progressBar">
+        <span id="progressBarFill"></span>
     </div>
 
     <script>
-        // 更改文本內容的功能
-        function changeText() {
-            document.getElementById("outputText").innerHTML = "文本已經被更改了！";
-        }
-
-        // 顯示或隱藏區塊的功能
-        function toggleBox() {
-            var box = document.getElementById("outputBox");
-            if (box.style.display === "none" || box.style.display === "") {
-                box.style.display = "block";
+        // 1. 顏色切換功能
+        const changeColorButton = document.getElementById('changeColorButton');
+        changeColorButton.addEventListener('click', function() {
+            if (document.body.style.backgroundColor === 'rgb(240, 240, 240)') {
+                document.body.style.backgroundColor = '#3498db';  // 藍色
             } else {
-                box.style.display = "none";
+                document.body.style.backgroundColor = '#f0f0f0';  // 原來的顏色
             }
-        }
+        });
 
-        // 改變背景顏色的功能
-        function changeBackgroundColor() {
-            var body = document.body;
-            var colors = ["#f0f8ff", "#ffebcd", "#fffacd", "#ffcccb", "#f0fff0"];
-            var currentColor = body.style.backgroundColor;
-            var newColor = colors[Math.floor(Math.random() * colors.length)];
+        // 2. 顯示/隱藏區塊功能
+        const toggleBoxButton = document.getElementById('toggleBoxButton');
+        const toggleBox = document.getElementById('toggleBox');
+        toggleBoxButton.addEventListener('click', function() {
+            toggleBox.classList.toggle('active');  // 使用 class 切換顯示或隱藏
+        });
 
-            // 保證不選到相同顏色
-            while (currentColor === newColor) {
-                newColor = colors[Math.floor(Math.random() * colors.length)];
-            }
+        // 3. 顯示圖片功能
+        const showImageButton = document.getElementById('showImageButton');
+        const imageContainer = document.getElementById('imageContainer');
+        showImageButton.addEventListener('click', function() {
+            imageContainer.style.display = (imageContainer.style.display === 'none' || imageContainer.style.display === '') ? 'block' : 'none';
+        });
 
-            body.style.backgroundColor = newColor;
-        }
-
-        // 顯示或隱藏圖片的功能
-        function toggleImage() {
-            var imageBox = document.getElementById("imageBox");
-            if (imageBox.style.display === "none" || imageBox.style.display === "") {
-                imageBox.style.display = "block";
-            } else {
-                imageBox.style.display = "none";
-            }
-        }
+        // 4. 進度條啟動功能
+        const startProgressButton = document.getElementById('startProgressButton');
+        const progressBarFill = document.getElementById('progressBarFill');
+        startProgressButton.addEventListener('click', function() {
+            let width = 0;
+            let progressInterval = setInterval(function() {
+                if (width >= 100) {
+                    clearInterval(progressInterval);  // 停止進度條
+                } else {
+                    width++;
+                    progressBarFill.style.width = width + '%';  // 更新進度條
+                }
+            }, 100);  // 每 100 毫秒增加 1%
+        });
     </script>
+
 </body>
 </html>
