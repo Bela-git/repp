@@ -143,6 +143,23 @@
                 width: 100%;
             }
         }
+
+        /* 進度條樣式 */
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
     </style>
 </head>
 
@@ -161,46 +178,74 @@
     <div class="container">
         <div class="card">
             <h2>About Me</h2>
-            <p>
-                我好想進大公司。
-            </p>
+            <p>我好想進大公司。</p>
         </div>
         <div class="card">
             <h2>My Projects</h2>
-            <p>
-                這邊涵蓋HTML CSS JAVA。
-            </p>
+            <p>這邊涵蓋HTML CSS JAVA。</p>
         </div>
     </div>
 
-    <!-- 聯繫表單 -->
+    <!-- 表單與進度條 -->
     <section id="contact">
         <h2>Contact Me</h2>
-        <form action="https://formspree.io/f/mrbplrpz" method="POST">
+        <form id="contactForm" action="https://formspree.io/f/mrbplrpz" method="POST">
             <input type="text" id="name" name="name" placeholder="Your Name" required />
             <input type="email" id="email" name="email" placeholder="Your Email" required />
             <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+            
+            <!-- 日期與時間輸入 -->
+            <input type="date" id="date" name="date" required />
+            <input type="time" id="time" name="time" required />
+
+            <!-- 驗證碼輸入 -->
+            <input type="text" id="captcha" name="captcha" placeholder="Enter CAPTCHA" required />
+            <div id="captchaImage">1234</div> <!-- 假的驗證碼顯示 -->
+
             <input type="submit" value="Send Message" />
         </form>
+
+        <div class="progress-bar">
+            <div class="progress" id="progressBar">0%</div>
+        </div>
+
+        <p>當前時間: <span id="currentTime"></span></p>
     </section>
 
     <script>
-        // 表單驗證和 AJAX 請求處理
-        document.getElementById('contactForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 防止表單默認提交行為
+        // 顯示當前時間
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString();
+        }
+        setInterval(updateTime, 1000); // 每秒更新時間
 
+        // 表單驗證和進度條更新
+        document.getElementById('contactForm').addEventListener('input', function () {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const captcha = document.getElementById('captcha').value;
 
-            // 表單驗證
-            if (!name || !email || !message) {
-                alert('請填寫所有欄位');
-                return;
-            }
+            // 計算填寫進度
+            let progress = 0;
+            if (name) progress += 20;
+            if (email) progress += 20;
+            if (message) progress += 20;
+            if (date) progress += 20;
+            if (time) progress += 10;
+            if (captcha) progress += 10;
 
-            // 模擬 AJAX 請求
-            alert(`謝謝，${name}！我們會儘快與您聯繫。`);
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').textContent = progress + '%';
+        });
+
+        // 驗證碼生成簡單示範
+        document.getElementById('captchaImage').addEventListener('click', function () {
+            const captcha = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('captchaImage').textContent = captcha;
         });
     </script>
 </body>
