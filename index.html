@@ -252,42 +252,67 @@
     <p>當前時間: <span id="currentTime"></span></p>
 </section>
 
-    <script>
-        // 顯示當前時間
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleString();
+<script>
+    // 更新時間
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('currentTime').textContent = now.toLocaleString();
+    }
+    setInterval(updateTime, 1000);
+
+    // 驗證碼生成（更困難）
+    function generateCaptcha() {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let captcha = "";
+        for (let i = 0; i < 6; i++) {
+            captcha += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        setInterval(updateTime, 1000); // 每秒更新時間
 
-        // 表單驗證和進度條更新
-        document.getElementById('contactForm').addEventListener('input', function () {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const captcha = document.getElementById('captcha').value;
+        const captchaElement = document.getElementById('captchaImage');
+        captchaElement.textContent = captcha;
+        captchaElement.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        
+        // 清空驗證碼輸入框
+        document.getElementById('captcha').value = "";
+    }
+    document.getElementById('captchaImage').addEventListener('click', generateCaptcha);
 
-            // 計算填寫進度
-            let progress = 0;
-            if (name) progress += 20;
-            if (email) progress += 20;
-            if (message) progress += 20;
-            if (date) progress += 20;
-            if (time) progress += 10;
-            if (captcha) progress += 10;
+    // 即時表單驗證 & 進度條更新
+    document.getElementById('contactForm').addEventListener('input', function () {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const captcha = document.getElementById('captcha').value.trim();
+        const realCaptcha = document.getElementById('captchaImage').textContent;
 
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressBar').textContent = progress + '%';
-        });
+        // 計算填寫進度
+        let progress = 0;
+        if (name) progress += 20;
+        if (email) progress += 20;
+        if (message) progress += 20;
+        if (date) progress += 20;
+        if (time) progress += 10;
+        if (captcha) progress += 10;
 
-        // 驗證碼生成簡單示範
-        document.getElementById('captchaImage').addEventListener('click', function () {
-            const captcha = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('captchaImage').textContent = captcha;
-        });
-    </script>
+        // 進度條動畫
+        document.getElementById('progressBar').style.width = progress + '%';
+        document.getElementById('progressBar').textContent = progress + '%';
+
+        // 即時錯誤提示
+        document.getElementById('errorName').textContent = name ? '' : '請輸入姓名';
+        document.getElementById('errorEmail').textContent = email ? '' : '請輸入有效的 Email';
+        document.getElementById('errorMessage').textContent = message ? '' : '請輸入訊息';
+        document.getElementById('errorDate').textContent = date ? '' : '請選擇日期';
+        document.getElementById('errorTime').textContent = time ? '' : '請選擇時間';
+        document.getElementById('errorCaptcha').textContent = (captcha && captcha === realCaptcha) ? '' : '驗證碼錯誤';
+
+    });
+
+    // 初次加載時生成驗證碼
+    generateCaptcha();
+</script>
 </body>
 
 </html>
