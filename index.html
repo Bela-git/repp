@@ -386,19 +386,21 @@ input[type="submit"]:hover {
     generateCaptcha();
 </script>
 <button id="fetchData">Fetch Data</button>
-<div id="data"></div>
+<div id="data"></div><!-- 顯示返回資料的地方 -->
 
 <script>
-    document.getElementById('fetchData').addEventListener('click', function() {
-        fetch('https://repp-5m0f6br7y-lins-projects-09ece822.vercel.app') // 正確的 API 路徑，記得加上 https://
-            .then(response => response.json())  // 解析 JSON
-            .then(data => {
-                // 將接收到的資料顯示到頁面上
-                document.getElementById('data').innerHTML = 
-                    `Name: ${data.name}, Job: ${data.job}`;
-            })
-            .catch(error => console.error('Error:', error)); // 捕捉錯誤並顯示在控制台
-    });
+document.getElementById('fetchData').addEventListener('click', function() {
+    console.log('Button clicked!');  // 檢查是否觸發了事件
+    fetch('https://repp-eight.vercel.app/api/data')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('data').innerHTML = `Name: ${data.name}, Job: ${data.job}`;
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+
+
 </script>
 
 </body>
