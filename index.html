@@ -394,14 +394,11 @@ document.getElementById('fetchData').addEventListener('click', function() {
     fetch('https://repp-eight.vercel.app/api/data')
         .then(response => response.json())
         .then(data => {
+            // 假設API返回 { "name": "John", "job": "Developer" }
             document.getElementById('data').innerHTML = `Name: ${data.name}, Job: ${data.job}`;
         })
         .catch(error => console.error('Error:', error));
 });
-
-
-
-
 
 </script>
 
